@@ -86,6 +86,8 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
+        print(username,password)
+
         if not username or not password:
             flash('Invalid input.')
             return redirect(url_for('login'))
