@@ -3,11 +3,10 @@ from sqlalchemy import Column, Index, String, Table
 from sqlalchemy.dialects.mysql import INTEGER
 from watchlist import db
 
+def as_dict(self):
+    return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-from watchlist import db
-
-
-
+db.Model.as_dict = as_dict
 
 class Fact(db.Model):
     __tablename__ = 'facts'
@@ -16,15 +15,12 @@ class Fact(db.Model):
     end_time = Column(String(1), primary_key=True, nullable=False)
     problem_id = Column(INTEGER(11))
 
-
-
 class Problem(db.Model):
     __tablename__ = 'problem'
     __table_args__ = {'comment': '问题'}
 
     id = Column(String(10), primary_key=True)
     name = Column(String(100), unique=True)
-
 
 class Stage(db.Model):
     __tablename__ = 'stage'
@@ -33,7 +29,6 @@ class Stage(db.Model):
     id = Column(String(10), primary_key=True)
     name = Column(String(50), nullable=False)
 
-
 class StageTopic(db.Model):
     __tablename__ = 'stage_topic'
     __table_args__ = {'comment': '阶段和话题'}
@@ -41,14 +36,12 @@ class StageTopic(db.Model):
     stage_id = Column(String(10), primary_key=True, nullable=False)
     topic_id = Column(String(10), primary_key=True, nullable=False)
 
-
 class Topic(db.Model):
     __tablename__ = 'topic'
     __table_args__ = {'comment': '主题'}
 
     id = Column(String(10), primary_key=True)
     name = Column(String(50), unique=True)
-
 
 class TopicProblem(db.Model):
     __tablename__ = 'topic_problem'

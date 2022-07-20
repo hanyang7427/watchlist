@@ -6,11 +6,16 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
-# import pymysql
-# pymysql.install_as_MySQLdb()
+WIN = sys.platform.startswith('win')
+if WIN:  # 如果是 Windows 系统，使用三个斜线
+    prefix = 'sqlite:///'
+else:  # 否则使用四个斜线
+    prefix = 'sqlite:////'
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@10.2.3.220:3311/watchlist'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@10.2.3.220:3311/watchlist'
+app.config['SQLALCHEMY_DATABASE_URI'] = prefix + os.path.join(app.root_path, 'data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -34,5 +39,4 @@ def inject_user():
     return dict(user=user)
 
 print('app.py executed')
-from watchlist import views, errors, commands
-
+from watchlist import my_view, views,errors, commands
